@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>KAVACH — combined system (3 + 6 + 7 + 10)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Archivo:wght@500;600;700;800&family=Courier+Prime&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'JetBrains Mono', monospace; background: #08080A; padding: 50px 0; }
+  .label { color: #7A7A7A; font-size: 12px; text-align: center; margin-bottom: 6px; letter-spacing: .04em; }
+  .note { color: #555; font-size: 11.5px; text-align: center; margin: 0 auto 18px; max-width: 680px; line-height: 1.6; }
+  .frame { width: 1080px; margin: 0 auto 56px; overflow: hidden; box-shadow: 0 24px 70px rgba(0,0,0,.55); }
+  .shield { display: inline-block; vertical-align: -4px; margin-right: 8px; }
+
+  /* ===== 1. LANDING — palette 7 sunset, signature burgundy accent on top ===== */
+  .m { background: linear-gradient(165deg, #FFBB94 0%, #FB9590 24%, #DC586D 52%, #A33757 76%, #4C1D3D 100%); padding: 0; }
+  .m-nav { display: flex; justify-content: space-between; align-items: center; padding: 22px 40px; }
+  .m-brand { display: flex; align-items: center; font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 15px; color: #fff; }
+  .m-links { font-size: 11.5px; color: rgba(255,255,255,.85); display: flex; gap: 24px; }
+  .m-hero { padding: 30px 40px 50px; }
+  .m-h1 { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 40px; line-height: 1.08; color: #fff; max-width: 640px; margin-bottom: 14px; text-shadow: 0 2px 20px rgba(76,29,61,.3); }
+  .m-sub { font-size: 13px; color: rgba(255,255,255,.92); max-width: 480px; margin-bottom: 26px; }
+  .m-personas { display: flex; gap: 10px; margin-bottom: 34px; }
+  .m-persona { font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 10px 18px; border-radius: 3px; border: 1px solid rgba(255,255,255,.55); color: #fff; }
+  .m-persona.on { background: #6D001A; border-color: #6D001A; }
+  .m-row { display: flex; gap: 20px; align-items: center; }
+  .m-pill { background: rgba(255,255,255,.9); color: #4C1D3D; font-size: 12px; padding: 9px 16px; border-radius: 20px; }
+  .m-preview { background: #16171F; border: 1px solid #6D001A; border-radius: 4px; padding: 14px 18px; width: 300px; font-size: 11px; color: #C9C9C9; }
+  .m-preview .t { color: #E5A6A6; font-size: 9.5px; letter-spacing: .08em; margin-bottom: 8px; }
+  .m-preview .r { display: flex; justify-content: space-between; padding: 4px 0; }
+
+  /* ===== 2. CONSOLE — palette 10 tri-tone, same signature burgundy spine ===== */
+  .e { display: grid; grid-template-columns: 210px 46px 1fr; min-height: 460px; }
+  .e-nav { background: #0A0A0A; color: #C9C9C9; padding: 26px 22px; }
+  .e-word { display: flex; align-items: center; font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 15px; color: #fff; margin-bottom: 30px; }
+  .e-item { font-size: 12.5px; padding: 9px 0; color: #8A8A8A; border-bottom: 1px solid #1C1C1C; }
+  .e-item.on { color: #fff; }
+  .e-stat { margin-top: 30px; }
+  .e-stat .n { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 26px; color: #fff; }
+  .e-stat .l { font-size: 10px; color: #8A8A8A; margin-top: 2px; }
+  .e-acc { background: #6D001A; display: flex; align-items: center; justify-content: center; }
+  .e-acc span { writing-mode: vertical-rl; color: #fff; font-family: 'Archivo', sans-serif; font-weight: 600; font-size: 11px; letter-spacing: .18em; }
+  .e-main { background: #F5F3F1; color: #131110; padding: 32px 40px; }
+  .e-h1 { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 27px; letter-spacing: -.01em; margin-bottom: 4px; }
+  .e-sub { font-size: 12.5px; color: #66605D; margin-bottom: 24px; }
+  .e-f-row { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid #DEDAD6; font-size: 13px; align-items: baseline; }
+  .e-num { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 13px; color: #6D001A; width: 22px; flex-shrink: 0; }
+  .e-f-row .c { margin-left: auto; font-size: 10.5px; color: #928C88; white-space: nowrap; }
+  .e-route { margin-top: 22px; }
+  .e-route-title { font-size: 10px; letter-spacing: .08em; color: #928C88; margin-bottom: 10px; }
+  .e-rrow { display: flex; padding: 7px 0; font-size: 12px; border-bottom: 1px solid #DEDAD6; color: #3A3532; }
+  .e-rrow b { color: #131110; font-weight: 500; margin-right: 10px; }
+  .e-ask { margin-top: 24px; }
+  .e-ask .l { font-family: 'Archivo', sans-serif; font-weight: 600; font-size: 10.5px; letter-spacing: .1em; color: #6D001A; margin-bottom: 8px; }
+  .e-ask input { width: 100%; background: none; border: none; border-bottom: 1px solid #131110; padding: 7px 0; color: #131110; font-family: 'JetBrains Mono', monospace; font-size: 13px; outline: none; }
+
+  /* ===== 3. ARCHIVE — palette 3 paper, same signature burgundy tag/stamp ===== */
+  .g { background: #EEE4DA; padding: 36px; }
+  .g-card { background: #F7F1EA; border: 1px solid #D8C4AC; position: relative; padding: 28px 34px; clip-path: polygon(0 0,3% 1.5%,6% 0,9% 1.5%,12% 0,15% 1.5%,18% 0,21% 1.5%,24% 0,27% 1.5%,30% 0,33% 1.5%,36% 0,39% 1.5%,42% 0,45% 1.5%,48% 0,51% 1.5%,54% 0,57% 1.5%,60% 0,63% 1.5%,66% 0,69% 1.5%,72% 0,75% 1.5%,78% 0,81% 1.5%,84% 0,87% 1.5%,90% 0,93% 1.5%,96% 0,99% 1.5%,100% 0,100% 100%,0 100%); }
+  .g-tag { position: absolute; top: 18px; right: 34px; background: #6D001A; color: #F7E6EA; font-size: 10px; letter-spacing: .1em; padding: 5px 10px; }
+  .g-brand { display: flex; align-items: center; font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 12px; color: #6D001A; margin-bottom: 16px; }
+  .g-cat { font-family: 'Courier Prime', monospace; font-size: 10.5px; color: #9E7A63; margin-bottom: 6px; }
+  .g-h1 { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 21px; color: #3B2A22; margin-bottom: 4px; }
+  .g-sub { font-size: 12px; color: #A88A76; margin-bottom: 20px; border-bottom: 1px solid #D8C4AC; padding-bottom: 16px; }
+  .g-row { display: flex; padding: 9px 0; border-bottom: 1px dotted #D8C4AC; font-size: 13px; color: #4A3A30; }
+  .g-row .c { margin-left: auto; font-size: 10.5px; color: #A88A76; }
+  .g-ask { margin-top: 20px; border-top: 1px solid #D8C4AC; padding-top: 14px; display: flex; gap: 10px; align-items: center; }
+  .g-ask .l { font-size: 10px; color: #9E7A63; letter-spacing: .06em; }
+  .g-ask input { flex: 1; background: none; border: none; border-bottom: 1px solid #6D001A; color: #3B2A22; font-family: 'Courier Prime', monospace; font-size: 13px; outline: none; }
+
+  /* ===== 4. NIGHT OPS — palette 6, signature burgundy as the sole alert color ===== */
+  .h { background: #190019; color: #DFB6B2; padding: 40px 40px; }
+  .h-brand { display: flex; align-items: center; font-family: 'Archivo', sans-serif; font-weight: 600; font-size: 12px; color: #854F6C; margin-bottom: 24px; }
+  .h-status { font-size: 13px; color: #DFB6B2; margin-bottom: 4px; }
+  .h-big { font-family: 'Archivo', sans-serif; font-weight: 600; font-size: 24px; color: #FBE4D8; margin-bottom: 24px; }
+  .h-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #DFB6B2; box-shadow: 0 0 8px #DFB6B2; margin-right: 8px; }
+  .h-list { border-top: 1px solid #2B124C; }
+  .h-row { display: flex; padding: 12px 0; border-bottom: 1px solid #2B124C; font-size: 13px; color: #854F6C; align-items: center; }
+  .h-row b { color: #DFB6B2; font-weight: 400; margin-right: 10px; }
+  .h-alert { color: #FF6B8A; margin-left: auto; font-size: 11px; }
+  .h-adot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #C2185B; margin-right: 6px; box-shadow: 0 0 6px #C2185B; }
+  .h-ask { margin-top: 24px; background: #2B124C; padding: 12px 16px; display: flex; gap: 10px; align-items: center; border-radius: 3px; }
+  .h-ask input { flex: 1; background: none; border: none; color: #FBE4D8; font-family: 'JetBrains Mono', monospace; font-size: 13px; outline: none; }
+</style>
+</head>
+<body>
+
+<div class="label">1 / MARKETING — palette 7</div>
+<div class="note">First thing a judge sees. Bold, warm, human — the only surface where a gradient is appropriate. Persona buttons pick up the signature burgundy on select.</div>
+<div class="frame">
+<div class="m">
+  <div class="m-nav">
+    <div class="m-brand"><svg class="shield" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><path d="M12 2 L20 5 V11 C20 17 16.5 20.5 12 22 C7.5 20.5 4 17 4 11 V5 Z"/></svg>KAVACH</div>
+    <div class="m-links"><span>How the sovereignty gate works</span><span>Team TokenGods</span></div>
+  </div>
+  <div class="m-hero">
+    <div class="m-h1">Confidential work, kept on the premises.</div>
+    <div class="m-sub">A sovereign, air-gapped agentic workbench for MRPL — open-weight models, local tools, nothing that leaves the fence.</div>
+    <div class="m-personas">
+      <div class="m-persona on">ENGINEER</div>
+      <div class="m-persona">AUDITOR</div>
+      <div class="m-persona">ADMINISTRATOR</div>
+    </div>
+    <div class="m-row">
+      <div class="m-pill">1,204 outbound calls blocked, live</div>
+      <div class="m-preview">
+        <div class="t">MODEL ROUTING — PREVIEW</div>
+        <div class="r"><span>qwen2.5-vl-72b</span><span>P&amp;ID vision</span></div>
+        <div class="r"><span>llama-3.3-70b</span><span>summary</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="label">2 / MAIN CONSOLE — palette 10</div>
+<div class="note">Where the work happens. High contrast, stark, checkable. The burgundy spine from the landing page returns here as the access/gate column.</div>
+<div class="frame">
+<div class="e">
+  <div class="e-nav">
+    <div class="e-word"><svg class="shield" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><path d="M12 2 L20 5 V11 C20 17 16.5 20.5 12 22 C7.5 20.5 4 17 4 11 V5 Z"/></svg>KAVACH</div>
+    <div class="e-item on">Overview</div>
+    <div class="e-item">Routing</div>
+    <div class="e-item">Agent runs</div>
+    <div class="e-item">Ledger</div>
+    <div class="e-stat"><div class="n">1,204</div><div class="l">calls blocked</div></div>
+  </div>
+  <div class="e-acc"><span>ACCESS SOVEREIGN</span></div>
+  <div class="e-main">
+    <div class="e-h1">Inspection findings</div>
+    <div class="e-sub">inspection-0472.pdf · unit 3 boiler feed line</div>
+    <div class="e-f-row"><span class="e-num">01</span><span>Omission to assist public servant, clause 187</span><span class="c">0.97</span></div>
+    <div class="e-f-row"><span class="e-num">02</span><span>Corrosion at flange joint B-12</span><span class="c">0.94</span></div>
+    <div class="e-f-row"><span class="e-num">03</span><span>Page 4, para 2 — held below threshold</span><span class="c">0.61 · held</span></div>
+    <div class="e-route">
+      <div class="e-route-title">MODEL ROUTING</div>
+      <div class="e-rrow"><b>qwen2.5-vl-72b</b> scanned P&amp;ID, vision required</div>
+      <div class="e-rrow"><b>llama-3.3-70b</b> report summarisation</div>
+    </div>
+    <div class="e-ask"><div class="l">ASK KAVACH</div><input placeholder="draft an approval note from inspection-0472.pdf"></div>
+  </div>
+</div>
+</div>
+
+<div class="label">3 / DOCUMENT REVIEW — palette 3</div>
+<div class="note">Opened from the console when reviewing a specific scanned file. Paper mode, lower stimulation than the console — same burgundy tag marking the confidentiality state.</div>
+<div class="frame">
+<div class="g">
+  <div class="g-card">
+    <div class="g-brand"><svg class="shield" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6D001A" stroke-width="1.8"><path d="M12 2 L20 5 V11 C20 17 16.5 20.5 12 22 C7.5 20.5 4 17 4 11 V5 Z"/></svg>KAVACH ARCHIVE</div>
+    <div class="g-tag">SOVEREIGN</div>
+    <div class="g-cat">REF. NO. INSP-0472 / MRPL-U3</div>
+    <div class="g-h1">Inspection findings — unit 3</div>
+    <div class="g-sub">Boiler feed line · scanned 12:04 · 6 pages</div>
+    <div class="g-row"><span>Omission to assist public servant, clause 187</span><span class="c">0.97</span></div>
+    <div class="g-row"><span>Corrosion at flange joint B-12</span><span class="c">0.94</span></div>
+    <div class="g-row"><span>Page 4, para 2 — held below threshold</span><span class="c">0.61</span></div>
+    <div class="g-ask"><span class="l">ASK KAVACH</span><input placeholder="summarise findings from the last 3 inspection reports"></div>
+  </div>
+</div>
+</div>
+
+<div class="label">4 / NIGHT OPS — palette 6</div>
+<div class="note">Toggled from the console for unattended overnight monitoring. Ambient and quiet by design — the one thing that still has to cut through is an alert, so it borrows a rose-red from the signature burgundy family rather than introducing a new color.</div>
+<div class="frame">
+<div class="h">
+  <div class="h-brand"><svg class="shield" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#854F6C" stroke-width="1.8"><path d="M12 2 L20 5 V11 C20 17 16.5 20.5 12 22 C7.5 20.5 4 17 4 11 V5 Z"/></svg>KAVACH · NIGHT OPS</div>
+  <div class="h-status"><span class="h-dot"></span>node isolated · 2 runs active</div>
+  <div class="h-big">All systems nominal.</div>
+  <div class="h-list">
+    <div class="h-row"><b>qwen2.5-vl-72b</b>reading inspection-0472.pdf, page 4 of 6</div>
+    <div class="h-row"><b>llama-3.3-70b</b>drafting approval-note.docx<span class="h-alert"><span class="h-adot"></span>1 page held</span></div>
+  </div>
+  <div class="h-ask"><input placeholder="ask KAVACH anything"></div>
+</div>
+</div>
+
+</body>
+</html>

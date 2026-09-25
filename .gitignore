@@ -1,0 +1,16 @@
+node_modules
+dist
+tests/.b
+tests/.out
+*.tsbuildinfo
+
+# --- backend (Phase 1+) ---
+backend/.env
+backend/data/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/.pytest_cache/
+backend/*.egg-info/
+backend/.venv/
+backend/venv/
+**/*.pyc

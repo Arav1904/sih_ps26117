@@ -1,0 +1,86 @@
+# KAVACH local development stack — Phase 1 scope.
+#
+# Brings up PostgreSQL and the backend API. The frontend still runs with
+# `npm run dev` from the repo root (Vite dev server) until Phase 3 wires
+# it to this backend; it is not containerized here yet to avoid adding a
+# service with nothing real for it to do.
+#
+# All ports bind to 127.0.0.1 only — see Section 52 ("Default to
+# loopback/private networking"). Nothing here is reachable from outside
+# this machine.
+#
+# Usage:
+#   cp backend/.env.example backend/.env   # then edit the secrets
+#   docker compose up -d postgres
+#   docker compose run --rm backend-migrate
+#   docker compose up -d backend
+#
+# See docs/backend/DEPLOYMENT.md for the full walkthrough, including the
+# Windows PowerShell equivalents.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    # NOTE: uses env_file, NOT `environment: KEY: ${VAR}` interpolation.
+    # `${VAR}` syntax in this file is resolved by Docker Compose itself,
+    # BEFORE any service starts, and Compose only auto-loads a `.env` that
+    # sits next to this docker-compose.yml (the repo root) — never
+    # backend/.env, which is where this project's actual secrets live and
+    # where every other service here (backend, backend-migrate) already
+    # correctly points via env_file. A previous version of this file used
+    # `POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in
+    # backend/.env}` here, which looked reasonable but was never able to
+    # see backend/.env at all — it always failed with "required variable
+    # POSTGRES_PASSWORD is missing a value" even when backend/.env was
+    # filled in correctly. See docs/backend/KNOWN_ISSUES.md BUG-006.
+    env_file:
+      - ./backend/.env
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - kavach_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      # `$$` (not `$`) so Compose passes this through literally as
+      # `$POSTGRES_USER` for the container's own shell to expand — using
+      # the real values env_file just injected — instead of Compose trying
+      # (and, per the note above, failing) to interpolate them itself.
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend-migrate:
+    build:
+      context: ./backend
+    env_file:
+      - ./backend/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint: ["alembic", "upgrade", "head"]
+    # Not started by `docker compose up` — run explicitly, see usage above.
+    profiles: ["tools"]
+
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - kavach_storage:/app/data/storage
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  kavach_postgres_data:
+  kavach_storage:
